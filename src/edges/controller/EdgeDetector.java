@@ -98,7 +98,10 @@ public class EdgeDetector
 			{
 				for(int y = 0; y < values[0].length; y++)
 				{
-					//code for gradient values goes here.
+					double gradRatio = values[x][y] / 1530.0f;
+					int gradient = (int)(255 * gradRatio);
+					
+					image.setRGB(x, y, new Color(gradient, gradient, gradient).getRGB());
 				}
 			}
 		}
