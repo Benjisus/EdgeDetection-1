@@ -61,7 +61,7 @@ public class EdgeDetector
 				int b = c.getBlue();
 				int g = c.getGreen();
 				int grey = (r + b + g)/3;
-				Color c2 = 	new Color(grey, grey, grey);
+				Color c2 = 	new Color(grey, b, grey);
 				image.setRGB(row,col,c2.getRGB());
 			}
 		}
