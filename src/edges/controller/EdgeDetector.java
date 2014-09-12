@@ -40,6 +40,13 @@ public class EdgeDetector
 		saveImage();
 	}
 	
+	public void startCreative()
+	{
+		chooseImage();
+		performCreative();
+		saveImage();
+	}
+	
 	/**
 	 * Opens a new file selection window so the user can select an image to perform on.
 	 */
@@ -64,16 +71,7 @@ public class EdgeDetector
 	 */
 	private void performDetection()
 	{
-		int[][] values = new int[image.getWidth()][image.getHeight()];
-		
-		for(int x = 0; x < image.getWidth(); x++)
-		{
-			for(int y = 0; y < image.getHeight(); y++)
-			{
-				int grad = Math.abs(grad(x + 1, y) - grad(x - 1, y)) + Math.abs(grad(x, y + 1) - grad(x, y - 1));
-				values[x][y] = grad;
-			}
-		}
+		int values[][] = fillArray();
 		
 		if(!useGradient)
 		{
@@ -98,7 +96,7 @@ public class EdgeDetector
 			{
 				for(int y = 0; y < values[0].length; y++)
 				{
-					double gradRatio = values[x][y] / 1530.0f;
+					double gradRatio = Math.sqrt(values[x][y] / 1530.0f);
 					int gradient = (int)(255 * gradRatio);
 					
 					image.setRGB(x, y, new Color(gradient, gradient, gradient).getRGB());
@@ -106,6 +104,52 @@ public class EdgeDetector
 			}
 		}
 		
+	}
+	
+	private int[][] fillArray()
+	{
+		int[][] values = new int[image.getWidth()][image.getHeight()];
+		
+		for(int x = 0; x < image.getWidth(); x++)
+		{
+			for(int y = 0; y < image.getHeight(); y++)
+			{
+				int grad = Math.abs(grad(x + 1, y) - grad(x - 1, y)) + Math.abs(grad(x, y + 1) - grad(x, y - 1));
+				values[x][y] = grad;
+			}
+		}
+		
+		return values;
+	}
+	
+	private void performCreative()
+	{
+		int values[][] = fillArray();
+		
+		for(int x = 0; x < values.length; x++)
+		{
+			for(int y = 0; y < values[0].length; y++)
+			{
+				int value = values[x][y];
+				
+				if(value > 300)
+				{
+					image.setRGB(x, y, Color.RED.getRGB());
+				}
+				else if(value > 275)
+				{
+					image.setRGB(x, y, Color.BLUE.getRGB());
+				}
+				else if(value > 250)
+				{
+					image.setRGB(x, y, Color.GREEN.getRGB());
+				}
+				else
+				{
+					image.setRGB(x, y, Color.WHITE.getRGB());
+				}
+			}
+		}
 	}
 	
 	/**
@@ -157,8 +201,8 @@ public class EdgeDetector
 	}
 	
 	/**
-	 * If false: a gray scale image will be produced based on the gradient values.
-	 * If true: a binary decision is made producing a black and white image.
+	 * If true: a gray scale image will be produced based on the gradient values.
+	 * If false: a binary decision is made producing a black and white image.
 	 * @param mapToGradient
 	 */
 	public void setUseGradient(boolean useGradient)

@@ -7,7 +7,7 @@ public class EdgeRunner
 	{
 		EdgeDetector detector = new EdgeDetector(null);
 		detector.setUseGradient(true);
-		detector.setThreshold(100);
+		detector.setThreshold(300);
 		detector.start();
 	}
 
